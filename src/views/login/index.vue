@@ -22,7 +22,7 @@
         </el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
+        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleRegister">
           Register
         </el-button>
       </el-form-item>
@@ -48,7 +48,7 @@ export default {
       }
     }
     const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
+      if (value.length < 3) {
         callback(new Error('密码不能小于5位'))
       } else {
         callback()
@@ -82,6 +82,9 @@ export default {
           return false
         }
       })
+    },
+    handleRegister () {
+      this.$router.push({ path: '/register' })
     }
   }
 }

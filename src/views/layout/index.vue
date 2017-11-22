@@ -4,7 +4,7 @@
       class="card-box login-form">
       <h3 class="title">vue-element-admin</h3>
       <el-form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogout">
+        <el-button type="primary" style="width:100%;" @click.native.prevent="handleLogout">
           Logout
         </el-button>
       </el-form-item>
@@ -15,8 +15,6 @@
 <script>
 export default {
   name: 'layout',
-  data () {
-  },
   methods: {
     handleLogout () {
       this.$router.push({ path: '/' })
