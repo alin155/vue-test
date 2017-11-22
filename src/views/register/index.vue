@@ -1,27 +1,30 @@
 <template>
   <div class="login-container">
-    <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
+    <el-form autoComplete="on" :model="registerForm" :rules="registerRules" ref="registerForm" label-position="left" label-width="0px"
       class="card-box login-form">
       <h3 class="title">Vue-Todos-Register</h3>
-      <el-form-item prop="username">
+      <el-form-item prop="username" :rules="[
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
+        ]">
         <span class="svg-container svg-container_login">
           <icon-svg icon-class="yonghuming" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+        <el-input name="username" type="text" v-model="registerForm.username" autoComplete="on" placeholder="username" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
           <icon-svg icon-class="mima"></icon-svg>
         </span>
-        <el-input name="password" type="password" v-model="loginForm.password" autoComplete="on"
+        <el-input name="password" type="password" v-model="registerForm.password" autoComplete="on"
           placeholder="password"></el-input>
       </el-form-item>
-      <el-form-item prop="password">
+      <el-form-item prop="checkPassword">
         <span class="svg-container">
           <icon-svg icon-class="mima"></icon-svg>
         </span>
-        <el-input name="password" type="password" @keyup.enter.native="handleRegister" v-model="loginForm.passwordAgain" autoComplete="on"
-          placeholder="password again"></el-input>
+        <el-input name="password" type="password" @keyup.enter.native="handleRegister" v-model="registerForm.checkPassword" autoComplete="on"
+          placeholder="check password"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleRegister">
@@ -33,45 +36,50 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
 
 export default {
   name: 'register',
   data () {
-    const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
+    const validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else if (value.length < 6) {
+        callback(new Error('密码不能小于6位数'))
       } else {
+        if (this.registerForm.checkPassword !== '') {
+          this.$refs.registerForm.validateField('checkPassword')
+        }
         callback()
       }
     }
-    const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
+    const validateCheckPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.registerForm.password) {
+        callback(new Error('两次输入密码不一致！'))
       } else {
         callback()
       }
     }
     return {
-      loginForm: {
+      registerForm: {
         username: '',
         password: '',
-        passwordAgain: ''
+        checkPassword: ''
       },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+      registerRules: {
         password: [{ required: true, trigger: 'blur', validator: validatePass }],
-        passwordAgain: [{ required: true, trigger: 'blur', validator: validatePass }]
+        checkPassword: [{ required: true, trigger: 'blur', validator: validateCheckPassword }]
       },
       loading: false
     }
   },
   methods: {
     handleRegister () {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.registerForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then(() => {
+          this.$store.dispatch('Login', this.registerForm).then(() => {
             this.loading = false
             this.$router.push({ path: '/' })
           }).catch(() => {
