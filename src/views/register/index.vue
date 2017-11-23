@@ -79,9 +79,9 @@ export default {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('Login', this.registerForm).then(() => {
+          this.$store.dispatch('Register', this.registerForm).then(() => {
             this.loading = false
-            this.$router.push({ path: '/' })
+            this.$router.push({ path: '/login' })
           }).catch(() => {
             this.loading = false
           })

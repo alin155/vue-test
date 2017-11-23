@@ -1,4 +1,4 @@
-import { login } from '@/api/login'
+import { login, register } from '@/api/login'
 
 const user = {
   state: {
@@ -34,6 +34,20 @@ const user = {
         login(username, userInfo.password).then(response => {
           const data = response.data
           console.log('--- user-actions(Login): data ---\n')
+          console.log(data)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    Register ({ commit }, userInfo) {
+      const username = userInfo.username.trim()
+      return new Promise((resolve, reject) => {
+        register(username, userInfo.password).then(response => {
+          const data = response.data
+          console.log('--- user-actions(Register): data ---\n')
           console.log(data)
           resolve()
         }).catch(error => {
